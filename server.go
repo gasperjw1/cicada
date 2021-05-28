@@ -2,60 +2,64 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
+	"os"
+
+	"github.com/gorilla/mux"
 )
 
-type Page struct {
-	Title string
-	Body  []byte
-}
+func UploadFile(w http.ResponseWriter, r *http.Request) {
 
-func (p *Page) save() error {
-	filename := p.Title + ".txt"
-	return ioutil.WriteFile(filename, p.Body, 0600)
-}
+	r.ParseMultipartForm(10 << 20)
 
-// Handle route
-func helloHandler(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path != "/hello" {
-		http.Error(w, "404 not found.", http.StatusNotFound)
+	// Get handler for filename, size and headers
+	file, handler, err := r.FormFile("file") //<- file from form
+	if err != nil {
+		fmt.Println("Error Retrieving the File")
+		fmt.Println(err)
 		return
 	}
 
-	if r.Method != "GET" {
-		http.Error(w, "Method is not supported.", http.StatusNotFound)
+	defer file.Close()
+	fmt.Printf("Uploaded File: %+v\n", handler.Filename)
+	fmt.Printf("File Size: %+v\n", handler.Size)
+	fmt.Printf("MIME Header: %+v\n", handler.Header)
+
+	// Create file
+	dst, err := os.Create(handler.Filename)
+	defer dst.Close()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	fmt.Fprintf(w, "Hello!")
-}
-
-// Handles Form Submission
-func formHandler(w http.ResponseWriter, r *http.Request) {
-	if err := r.ParseForm(); err != nil {
-		fmt.Fprintf(w, "ParseForm() err: %v", err)
+	// Copy the uploaded file to the created file on the filesystem
+	if _, err := io.Copy(dst, file); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	fmt.Fprintf(w, "POST request successful")
-	name := r.FormValue("name")
-	address := r.FormValue("address")
-
-	fmt.Fprintf(w, "Name = %s\n", name)
-
-	fmt.Fprintf(w, "Address = %s\n", address)
+	fmt.Fprintf(w, "Successfully Uploaded File\n")
 }
 
 // Main
 func main() {
+	//Creates a project
+	// project, err := uplink.OpenProject(ctx, access)
+	// if err != nil {
+	// 	return err
+	// }
+	// defer project.Close()
 
+	// just a test page
 	fileServer := http.FileServer(http.Dir("./static"))
-
 	http.Handle("/", fileServer)
 
-	http.HandleFunc("/hello", helloHandler)
+	// go router
+	router := mux.NewRouter()
+	router.HandleFunc("/upload-file", UploadFile).Methods("POST")
 
 	fmt.Printf("Starting server at port 8080\n")
 
