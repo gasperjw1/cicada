@@ -105,3 +105,4 @@ dist
 
 # Contract files
 build/contracts
+.DS_Store
