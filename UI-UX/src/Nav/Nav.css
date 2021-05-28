@@ -1,0 +1,41 @@
+@keyframes initNav{
+    100%{
+        transform:translateY(0);
+    }
+}
+
+nav{
+    width:100vw;
+    height:max-content;
+    border-bottom:1px solid black;
+    position:sticky;
+    transform:translateY(-100%);
+    top:0;
+    animation: initNav 300ms ease forwards;
+    display:flex;
+    align-items: center;
+    padding:10px 50px;
+}
+
+.logo{
+    display:inline-block;
+    font-size:20px;
+    margin-left:2.45rem;
+}
+
+.connect-portis-button{
+    padding:5px 10px;
+    display:inline-block;
+    margin-left:auto;
+    border: 2px solid rgba(108, 23, 177,0.8); 
+    color:rgb(108, 23, 177);
+    font-size: 20px;
+    border-radius:0.3rem;
+    transition: all 100ms ease-out;
+    text-transform: capitalize;
+}
+
+.connect-portis-button:hover{
+    color:white;
+    background-color:rgb(108, 23, 177); 
+}

@@ -1,0 +1,48 @@
+.home-container{
+    width: 100vw;
+    height: 100%;
+    background-color: #001030;
+}
+
+.home-landing{
+    width: 100%; 
+    height: calc(100vh - 70px);
+    display: flex;
+}
+
+.text-wrapper{
+    width: 40%;
+    align-items: start;
+    display: flex;
+    flex-direction: column;
+    margin-top: 13em;
+    margin-left: 5em;
+}
+
+.text-holder{
+    color: white;
+    font-size: 3rem;
+    font-weight: 600;
+}
+
+.button-wrapper{
+    width: 150px;
+    height: 50px;
+    border: white solid 2px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 300;
+    cursor: pointer;
+    margin-top: 2em;
+}
+
+.button-wrapper:hover{
+    background-color: white;
+    color:#001030;
+    font-weight: 300;
+    font-size: 1.2rem;  
+}
