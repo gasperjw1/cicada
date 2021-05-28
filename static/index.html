@@ -6,10 +6,10 @@
   </head>
   <body>
     <h2>Static Website</h2>
-    <form enctype="multipart/form-data" action="/upload-file" method="POST">
-    <input type="file" name="uploadfile" />
-    <input type="hidden" name="token" value="{{.}}"/>
-    <input type="submit" value="upload" />
-</form>
+    <form action="/upload-file" method="POST">
+      <input type="file" name="uploadfile" />
+      <input type="hidden" name="token" value="{{.}}"/>
+      <input type="submit" value="upload" />
+    </form>
   </body>
 </html>
