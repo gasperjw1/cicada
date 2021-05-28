@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"github.com/gorilla/mux"
+	"src/github.com/gorilla/mux"
 )
 
 type Page struct {
