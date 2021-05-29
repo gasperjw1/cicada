@@ -1,11 +1,11 @@
 import './App.css';
-import Portis from '@portis/web3';
-import Web3 from 'web3';
 import { WALLET_SUCCESS } from './Redux/Constants/walletConstants'
 import { useDispatch } from 'react-redux'
-import Home from './Home/Home.js';
+import Home from './Pages/Home/Home.js';
+import Upload from './Pages/Upload/Upload'
 import Nav from './Nav/Nav.js';
 import { web3, portis } from './services/web3'
+import {BrowserRouter as Router, Switch,Route} from 'react-router-dom';
 
 function App() {
   const dispatch = useDispatch()
@@ -17,10 +17,15 @@ function App() {
   }
 
   return (
-    <div className="App">
-      <Nav connect_wall={connect} />
-      <Home/>
-    </div>
+    <Router>
+      <div className="App">
+        <Nav connect_wall={connect} />
+        <Switch>
+          <Route path='/' exact component={Home}/>
+          <Route path='/upload' exact component={Upload}/>
+        </Switch>
+      </div>
+    </Router>
   );
 }
 
