@@ -38,23 +38,28 @@
     margin: 10px 0;
     position:relative;
     display: flex;
-    justify-content: space-between;
 
 }
-
-.display-files p:first-child{
-    width: 200px; 
+.display-files p{
+    width:100%;
+    min-width:max-content;
+    font-size:0.7rem;
+    text-overflow: ellipsis;
+    text-align:center;
+}
+/* .display-files p:first-child{
+     width: 200px; 
     font-size:0.7rem;
 }
 .display-files p:nth-child(2){
     margin-left: 16em;
     font-size:0.7rem;
-}
+}*/
 .display-files p:nth-child(3){
-    font-size:0.7rem;
-    margin-right: 10em;
-    width: 320px;
-}
+    /* font-size:0.7rem; */
+    margin-right: 3rem;
+    /* width: 320px; */
+}  
 
 .X-container{
     position:absolute;

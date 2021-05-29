@@ -38,7 +38,8 @@ export default function Home(){
                             <img className='stable-logo' src={stable} alt='stable.png'/>
                         </div>
                         <div className="right-fotter">
-
+                            <h2>Contact Us</h2>
+                            <h2></h2>
                         </div>   
                     </div>
 
