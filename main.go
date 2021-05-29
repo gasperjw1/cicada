@@ -1,24 +1,22 @@
 package main
 
 import (
+	"bytes"
+	"context"
 	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
+	"strings"
 	"text/template"
 	"time"
 
-	"bytes"
-	"context"
-	"log"
-
-	"storj/uplink"
+	"storj.io/uplink"
 
 	"github.com/joho/godotenv"
 )
-
-var accessT string
 
 // Compile templates on start of the application
 var templates = template.Must(template.ParseFiles("public/upload.html"))
@@ -28,8 +26,7 @@ func display(w http.ResponseWriter, page string, data interface{}) {
 	templates.ExecuteTemplate(w, page+".html", data)
 }
 
-// UploadAndDownloadData uploads the data to objectKey in
-// bucketName, using accessGrant.
+// UploadData uploads the data to objectKey in bucketName, using accessGrant.
 func UploadData(ctx context.Context, data []byte) error {
 	//Gets access grant stored in .env
 	var envs map[string]string
@@ -54,10 +51,10 @@ func UploadData(ctx context.Context, data []byte) error {
 	}
 	defer project.Close()
 
-	accessT = access
-
 	var bucketName string = "bucket1"
-	var objectKey = time.Now()
+	var objectKey string = time.Now().Format("2006-01-02 15:04:05")
+	objectKey = strings.Replace(objectKey, ":", "-", -1)
+	objectKey = strings.Replace(objectKey, " ", "_", -1)
 
 	// Ensure the desired Bucket within the Project is created.
 	_, err = project.EnsureBucket(ctx, bucketName)
