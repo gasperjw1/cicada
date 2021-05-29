@@ -19,6 +19,7 @@ function App() {
         .listAccounts()
         .then(wallet => {
           if (wallet.length) {
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
             const REGISTERED_USER = ethers.utils.keccak256(ethers.utils.toUtf8Bytes("REGISTERED_USER"))
             const signer = provider.getSigner()
             const address = ""
