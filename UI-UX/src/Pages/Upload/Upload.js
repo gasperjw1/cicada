@@ -4,6 +4,7 @@ import { useSelector} from 'react-redux'
 import user from '../../Assets/user.png'
 import upload from '../../Assets/upload.png'
 import upload2 from '../../Assets/upload2.png'
+import Display from './displayUpload';
 
 import './Upload.css'
 
@@ -53,30 +54,6 @@ const Upload = () => {
     
     return (
         <div className='Container'>
-
-            <div className='Upload'>
-                <form onSubmit={submitUploads}>
-                    <input name='myFile' 
-                           type='file' 
-                           onChange={onFileChange}
-                           />
-                    <input type='submit' value='Upload'/>
-                </form>
-                <button onClick={()=>{console.log(selectedFile)}}>selected file</button>
-            </div>
-            <div className="display-files-container">
-                {
-                    selectedFile.map((fileHandle,index)=>{
-                        return(
-                            <div key={`${fileHandle}${index}`} className="display-files" >
-                                <p>{fileHandle.name}</p>
-                                <p>{fileHandle.lastModifiedDate.toString()}</p>
-                                <div className="X-container"  onClick={()=>removeFile(index)}/>
-                            </div>
-                        );
-                    })
-                }
-            </div>
             <div className='upload-container'>
                 <div className='upload-wrapper'>
                     <div className="top-container">  
@@ -97,15 +74,17 @@ const Upload = () => {
                             <label className="upload-file" for="file"> <img className="upload-img"src={upload2} alt="upload.png"/> Choose a file</label>
                             <input className="upload-button"type='submit' value='Upload'></input>
                         </form>
-
                     </div>
                     </div>
                     <div className="break"/>
                     <div className="static-text">
-                        <h1 className="static-h1">Name</h1> <h1 className="static-h1">Size</h1> <h1 className="static-h1">Upload Date</h1>
+                        <h1 className="static-h1-one">Name</h1> <h1 className="static-h1-two">Size</h1> <h1 className="static-h1-three">Upload Date</h1>
                     </div>
                     <div className="break"/>
-                    <button onClick={()=>{console.log(selectedFile)}}>selected file</button>
+
+                    <div className="second-container">
+                    <Display selectedFile={selectedFile} removeFile={removeFile} />
+                    </div>
                 </div>
                 </div>
             </div>

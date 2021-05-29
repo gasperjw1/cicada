@@ -18,9 +18,8 @@
 }
 
 .display-files-container{
-    width:30rem;
-    height:20rem;
-    background-color: grey;
+    width:100%;
+    height:100%;
     border-radius:1rem;
     display: flex;
     align-items: center;
@@ -30,25 +29,36 @@
 
 .display-files{
     box-shadow: 0px 1px 3px black;
-    width:93%;
+    width:98%;
     height:max-content;
-    background-color: rgb(169, 169, 169);
+    background-color:#00173D;
+    color:white;
     border-radius:0.9rem;
     padding-left:20px;
-    margin: 3px 0;
+    margin: 10px 0;
     position:relative;
+    display: flex;
+    justify-content: space-between;
+
 }
 
 .display-files p:first-child{
-    font-size:0.9rem;
+    width: 200px; 
+    font-size:0.7rem;
 }
-.display-files p:last-child{
-    font-size:0.6rem;
+.display-files p:nth-child(2){
+    margin-left: 16em;
+    font-size:0.7rem;
+}
+.display-files p:nth-child(3){
+    font-size:0.7rem;
+    margin-right: 10em;
+    width: 320px;
 }
 
 .X-container{
     position:absolute;
-    top:6%;
+    top:25%;
     right:3%;
     width:1.2rem;
     height:1.2rem;
@@ -173,10 +183,30 @@
     background-color: #00173D;
 }
 .static-text{
+    width: 100%;
     display: flex;
     justify-content: space-between;
 }
-.static-h1{
+.static-h1-one{
     font-size: .9em;
     font-weight: 400;
+    margin-left: 2.5rem;
+}
+.static-h1-two{
+    font-size: .9em;
+    font-weight: 400;
+}
+.static-h1-three{
+    font-size: .9em;
+    font-weight: 400;
+    margin-right: 2.5rem;
+}
+.second-container{
+    margin-top: 1em;
+    display: flex;
+    width: 95%;
+    height: 67%;
+    border-radius: 15px;
+    border: 4px dashed rgb(156, 156, 156);
+    background-color: rgb(211, 211, 211);
 }
