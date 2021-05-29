@@ -117,15 +117,14 @@
 
 .foot-note-wrapper{
     height:80%;
-    width: 70%;
+    width: 100%;
     display: flex;
     align-items: center;
-    justify-content: center;
 }
 
 .left-footer{
-    margin-top: 2em;
-    width: 50%;
+    margin-left:auto;
+    width: 25%;
     height: 100%;
     display: flex;
     color: #001030;
@@ -133,11 +132,8 @@
 }
 
 .right-fotter{
-    width: 50%;
+    width: 25%;
     height: 100%;
-    display: flex;
-    justify-content: right;
-
 }
 
 .stable-logo{
