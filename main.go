@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"container/list"
 	"context"
 	"fmt"
 	"io"
@@ -9,7 +10,6 @@ import (
 	"log"
 	"net/http"
 	"strings"
-	"text/template"
 	"time"
 
 	"storj.io/uplink"
@@ -18,12 +18,63 @@ import (
 	"github.com/rs/cors"
 )
 
-// Compile templates on start of the application
-var templates = template.Must(template.ParseFiles("public/upload.html"))
+// // Compile templates on start of the application
+// var templates = template.Must(template.ParseFiles("public/upload.html"))
 
-// Display the named template
-func display(w http.ResponseWriter, page string, data interface{}) {
-	templates.ExecuteTemplate(w, page+".html", data)
+// // Display the named template
+// func display(w http.ResponseWriter, page string, data interface{}) {
+// 	templates.ExecuteTemplate(w, page+".html", data)
+// }
+
+func displayAll(w http.ResponseWriter, r *http.Request) (int[] , error) {
+
+	ctx := context.Background()
+
+	var sliceOfObj []int = make([]int,0)
+
+	//Gets access grant stored in .env
+	var envs map[string]string
+	envs, err := godotenv.Read(".env")
+
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	accessGrant := envs["STORJACCESSGRANT"]
+
+	// Parse the Access Grant.
+	access, err := uplink.ParseAccess(accessGrant)
+	if err != nil {
+		return fmt.Errorf("could not parse access grant: %v", err)
+	}
+
+	// Creates a project using our access
+	project, err := uplink.OpenProject(ctx, access)
+	if err != nil {
+		return fmt.Errorf("could not open project: %v", err)
+	}
+	defer project.Close()
+
+	// Creates the bucketName and objectKey variables to be used later
+	var bucketName string = "bucket1"
+
+	// Ensure the desired Bucket within the Project is created.
+	_, err = project.EnsureBucket(ctx, bucketName)
+	if err != nil {
+		return fmt.Errorf("could not ensure bucket: %v", err)
+	}
+
+	objects := project.ListObjects(ctx, "bucket1", nil)
+	for objects.Next() {
+		item := objects.Item()
+		fmt.Println(item.IsPrefix, item.Key)
+		sliceOfObj = append(sliceOfObj, item.Key)
+	}
+	if err := objects.Err(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // UploadData uploads the data to objectKey in bucketName, using accessGrant.
@@ -216,9 +267,20 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	enableCors(&w)
 	switch r.Method {
 	case "GET":
-		display(w, "upload", nil)
+		// display(w, "upload", nil)
 	case "POST":
 		uploadFile(w, r)
+	}
+}
+
+func downloadHandler(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+	switch r.Method {
+	case "GET":
+		// display(w, "upload", nil)
+		displayAll(w, r)
+	case "POST":
+		downloadFile(w, r)
 	}
 }
 
@@ -235,7 +297,9 @@ func main() {
 
 	// Upload route
 	mux.HandleFunc("/upload", uploadHandler)
+	mux.HandleFunc("/download", downloadHandler)
 	handler := cors.Default().Handler(mux)
+
 	fmt.Printf("Starting server at port 8080\n")
 	// fmt.Printf(poof)
 
