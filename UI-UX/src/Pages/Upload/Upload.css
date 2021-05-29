@@ -1,0 +1,14 @@
+.Container{
+    height: auto;
+    width: 100vw;
+    justify-content: center;
+    display: flex;
+    position: relative;
+    background-color: white;
+}
+
+.Upload{
+    width: 300px;
+    height: 300px;
+    margin-top: 200px;
+}
