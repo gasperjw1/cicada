@@ -36,11 +36,9 @@ const Dashboard = () => {
             for (i=0; i < selectedFile.length; i++)
             {
                 const formData = new FormData()
-                formData.append({
-                    'size' : selectedFile[i].size.toString(),
-                    'type' : selectedFile[i].type.toString(),
-                    'fileName' : selectedFile[i]}
-                    )
+                formData.append('fileName' , selectedFile[i])
+                formData.append('size' , selectedFile[i].size.toString())
+                formData.append('type' , selectedFile[i].type.toString())
                 const res = await axios.post('http://localhost:8080/upload', formData, {
                     headers: {
                         'Content-Type':'multipart/form-data'
