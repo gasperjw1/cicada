@@ -3,6 +3,7 @@ import './Home.css';
 import Particles from 'react-particles-js';
 import para from './particles.json'
 import logo from '../../Assets/logo2.png'
+import stable from '../../Assets/stable.png'
 
 export default function Home(){
     return(
@@ -34,6 +35,7 @@ export default function Home(){
                     <div className="foot-note-wrapper">
                         <div className="left-footer">
                             <h1>Powered by: </h1>
+                            <img className='stable-logo' src={stable} alt='stable.png'/>
                         </div>
                         <div className="right-fotter">
 

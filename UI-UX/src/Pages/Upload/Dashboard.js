@@ -7,9 +7,9 @@ import myfilesIcon from '../../Assets/myfilesicon.png'
 import upload2 from '../../Assets/upload2.png'
 import Display from './displayUpload';
 
-import './Upload.css'
+import './Dashboard.css'
 
-const Upload = () => {
+const Dashboard = () => {
     const userWallet = useSelector(state=>state.walletList)
 
     const [selectedFile, uploadFile] = useState([])
@@ -36,7 +36,11 @@ const Upload = () => {
             for (i=0; i < selectedFile.length; i++)
             {
                 const formData = new FormData()
-                formData.append('fileName', selectedFile[i])
+                formData.append({
+                    'size' : selectedFile[i].size.toString(),
+                    'type' : selectedFile[i].type.toString(),
+                    'fileName' : selectedFile[i]}
+                    )
                 const res = await axios.post('http://localhost:8080/upload', formData, {
                     headers: {
                         'Content-Type':'multipart/form-data'
@@ -44,7 +48,7 @@ const Upload = () => {
                 });
                 console.log('its sent')
             }
-        } catch (error) {
+            } catch (error) {
             
         }
     }
@@ -152,4 +156,4 @@ const Upload = () => {
     )
 }
 
-export default Upload
+export default Dashboard

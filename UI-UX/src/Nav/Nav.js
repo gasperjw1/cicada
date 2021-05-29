@@ -42,7 +42,7 @@ export default function Nav(props){
             </div>
             <div className="nav-item upload">
                 <div className="underline"/>
-                <Link to="/upload" target="_self">Upload</Link>
+                <Link to="/dashboard" target="_self">Dashboard</Link>
             </div>
             <button className="connect-portis-button" onClick={props.connect_wall} >
                 Connect Portis

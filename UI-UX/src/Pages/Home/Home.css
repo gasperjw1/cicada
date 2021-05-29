@@ -125,8 +125,15 @@
 }
 
 .left-footer{
+    margin-top: 2em;
     width: 50%;
     height: 100%;
     display: flex;
     color: #001030;
+    flex-direction: column;
+}
+
+.stable-logo{
+    width: 80px;
+    object-fit: contain;
 }
