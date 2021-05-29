@@ -10,7 +10,6 @@ const Display = (props) => {
                         <div key={`${fileHandle}${index}`} className="display-files" >
                             <p>{fileHandle.name}</p>
                             <p>SIZE</p>
-                            <p>{fileHandle.lastModifiedDate.toString()}</p>
                             <div className="X-container"  onClick={()=>props.removeFile(index)}/>
                     </div>
                     );

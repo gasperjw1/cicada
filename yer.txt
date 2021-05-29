@@ -1,8 +1,0 @@
-
-Content-Disposition: form-data; name="myFile"; filename="bum.txt"
-Content-Type: text/plain
-
-Corriander crush,
-all you other niggas blush
-while I poop inside a bush
-------WebKitFormBoundaryyeofPBgHIsQmp5HT--
