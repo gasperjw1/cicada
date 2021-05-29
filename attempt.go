@@ -53,16 +53,16 @@ func postFile(filename string, targetUrl string) error {
 }
 
 // sample usage
-func main() {
-	target_url := "http://localhost:8080/upload"
-	filename := "./astaxie.pdf"
+// func main() {
+// 	target_url := "http://localhost:8080/upload"
+// 	filename := "./astaxie.pdf"
 
-	//Creates a project
-	project, err := uplink.OpenProject(ctx, access)
-	if err != nil {
-		return err
-	}
-	defer project.Close()
+// 	//Creates a project
+// 	project, err := uplink.OpenProject(ctx, access)
+// 	if err != nil {
+// 		return err
+// 	}
+// 	defer project.Close()
 
-	postFile(filename, target_url)
-}
+// 	postFile(filename, target_url)
+// }

@@ -5,8 +5,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-
-	"github.com/gorilla/mux"
 	//"github.com/joho/godotenv"
 	// "storj.io/uplink"
 )
@@ -74,37 +72,37 @@ func UploadFile(w http.ResponseWriter, r *http.Request) {
 
 }
 
-// Main
-func main() {
-	//Creates a project
-	// var envs map[string]string
-	// envs, err := godotenv.Read(".env")
+// // Main
+// func main() {
+// 	//Creates a project
+// 	// var envs map[string]string
+// 	// envs, err := godotenv.Read(".env")
 
-	// if err != nil {
-	// 	log.Fatal("Error loading .env file")
-	// }
+// 	// if err != nil {
+// 	// 	log.Fatal("Error loading .env file")
+// 	// }
 
-	// name := envs["STORJACCESSGRANT"]
-	// project, err := uplink.OpenProject(ctx, access)
-	// if err != nil {
-	// 	return err
-	// }
-	// defer project.Close()
+// 	// name := envs["STORJACCESSGRANT"]
+// 	// project, err := uplink.OpenProject(ctx, access)
+// 	// if err != nil {
+// 	// 	return err
+// 	// }
+// 	// defer project.Close()
 
-	// just a test page
-	fileServer := http.FileServer(http.Dir("./static"))
-	http.Handle("/", fileServer)
+// 	// just a test page
+// 	fileServer := http.FileServer(http.Dir("./static"))
+// 	http.Handle("/", fileServer)
 
-	// go router
-	router := mux.NewRouter()
-	router.HandleFunc("/upload-file", UploadFile).Methods("POST")
-	//router.Handle("/upload-file", UploadFile)
-	// http.HandleFunc("/upload-file", UploadFile) //enctype="multipart/form-data"
+// 	// go router
+// 	router := mux.NewRouter()
+// 	router.HandleFunc("/upload-file", UploadFile).Methods("POST")
+// 	//router.Handle("/upload-file", UploadFile)
+// 	// http.HandleFunc("/upload-file", UploadFile) //enctype="multipart/form-data"
 
-	fmt.Printf("Starting server at port 8080\n")
-	// fmt.Printf(poof)
+// 	fmt.Printf("Starting server at port 8080\n")
+// 	// fmt.Printf(poof)
 
-	if err := http.ListenAndServe(":8080", nil); err != nil {
-		log.Fatal(err)
-	}
-}
+// 	if err := http.ListenAndServe(":8080", nil); err != nil {
+// 		log.Fatal(err)
+// 	}
+// }

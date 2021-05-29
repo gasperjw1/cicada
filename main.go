@@ -3,17 +3,19 @@ package main
 import (
 	"fmt"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"text/template"
 	"time"
-	"github.com/joho/godotenv"
-	"storj.io/uplink"
 
 	"bytes"
 	"context"
-	"io/ioutil"
 	"log"
+
+	"storj/uplink"
+
+	"github.com/joho/godotenv"
 )
 
 var accessT string
@@ -29,9 +31,33 @@ func display(w http.ResponseWriter, page string, data interface{}) {
 // UploadAndDownloadData uploads the data to objectKey in
 // bucketName, using accessGrant.
 func UploadData(ctx context.Context, data []byte) error {
-	
-	bucketName = "bucket1"
-	objectKey = time.Now()
+	//Gets access grant stored in .env
+	var envs map[string]string
+	envs, err := godotenv.Read(".env")
+
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	accessGrant := envs["STORJACCESSGRANT"]
+
+	// Parse the Access Grant.
+	access, err := uplink.ParseAccess(accessGrant)
+	if err != nil {
+		return fmt.Errorf("could not parse access grant: %v", err)
+	}
+
+	// Creates a project using our access
+	project, err := uplink.OpenProject(ctx, access)
+	if err != nil {
+		return fmt.Errorf("could not open project: %v", err)
+	}
+	defer project.Close()
+
+	accessT = access
+
+	var bucketName string = "bucket1"
+	var objectKey = time.Now()
 
 	// Ensure the desired Bucket within the Project is created.
 	_, err = project.EnsureBucket(ctx, bucketName)
@@ -95,7 +121,14 @@ func uploadFile(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Fprintf(w, "Successfully Uploaded File\n")
-	UploadData(ctx, dst)
+
+	// Converts *os.File into []byte
+	b, err := ioutil.ReadAll(dst)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	UploadData(context.Background(), b)
 }
 
 func uploadHandler(w http.ResponseWriter, r *http.Request) {
@@ -108,30 +141,6 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	//Creates a project
-	var envs map[string]string
-	envs, err := godotenv.Read(".env")
-
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-
-	accessGrant := envs["STORJACCESSGRANT"]
-
-	// Parse the Access Grant.
-	access, err := uplink.ParseAccess(accessGrant)
-	if err != nil {
-		return fmt.Errorf("could not parse access grant: %v", err)
-	}
-	
-	project, err := uplink.OpenProject(ctx, access)
-	if err != nil {
-		return fmt.Errorf("could not open project: %v", err)
-	}
-	defer project.Close()
-
-	accessT = access
-
 	// Upload route
 	http.HandleFunc("/upload", uploadHandler)
 
