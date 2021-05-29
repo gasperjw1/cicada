@@ -28,8 +28,7 @@ func display(w http.ResponseWriter, page string, data interface{}) {
 
 // UploadData uploads the data to objectKey in bucketName, using accessGrant.
 func UploadData(ctx context.Context, data []byte) error {
-
-	print("Now we here\n")
+	//func UploadData(ctx context.Context, data *os.File) error {
 
 	//Gets access grant stored in .env
 	var envs map[string]string
@@ -44,16 +43,12 @@ func UploadData(ctx context.Context, data []byte) error {
 	// Parse the Access Grant.
 	access, err := uplink.ParseAccess(accessGrant)
 	if err != nil {
-		print("d")
 		return fmt.Errorf("could not parse access grant: %v", err)
 	}
-
-	print("Now we here\n")
 
 	// Creates a project using our access
 	project, err := uplink.OpenProject(ctx, access)
 	if err != nil {
-		print("f")
 		return fmt.Errorf("could not open project: %v", err)
 	}
 	defer project.Close()
@@ -67,16 +62,12 @@ func UploadData(ctx context.Context, data []byte) error {
 	// Ensure the desired Bucket within the Project is created.
 	_, err = project.EnsureBucket(ctx, bucketName)
 	if err != nil {
-		print("y")
 		return fmt.Errorf("could not ensure bucket: %v", err)
 	}
-
-	print("Now we here\n")
 
 	// Intitiate the upload of our Object to the specified bucket and key.
 	upload, err := project.UploadObject(ctx, bucketName, objectKey, nil)
 	if err != nil {
-		print("i")
 		return fmt.Errorf("could not initiate upload: %v", err)
 	}
 
@@ -84,21 +75,27 @@ func UploadData(ctx context.Context, data []byte) error {
 	buf := bytes.NewBuffer(data)
 	_, err = io.Copy(upload, buf)
 	if err != nil {
-		print("p")
 		_ = upload.Abort()
 		return fmt.Errorf("could not upload data: %v", err)
 	}
 
-	print("Now we here\n")
-
 	// Commit the uploaded object.
 	err = upload.Commit()
 	if err != nil {
-		print("u")
 		return fmt.Errorf("could not commit uploaded object: %v", err)
 	}
 
-	///////////////////////////// Tests if the image uploaded is the correct image
+	// Test to see what is uploaded in our bucket
+	// objects := project.ListObjects(ctx, "bucket1", nil)
+	// for objects.Next() {
+	// 	item := objects.Item()
+	// 	fmt.Println(item.IsPrefix, item.Key)
+	// }
+	// if err := objects.Err(); err != nil {
+	// 	return err
+	// }
+
+	// /////////////////////////// Tests if the image uploaded is the correct image
 
 	// Initiate a download of the same object again
 	download, err := project.DownloadObject(ctx, bucketName, objectKey, nil)
@@ -113,12 +110,34 @@ func UploadData(ctx context.Context, data []byte) error {
 		return fmt.Errorf("could not read data: %v", err)
 	}
 
-	print(receivedContents) //Shows that the []byte contains 0 bytes (512 capacity)
+	print(receivedContents) //Shows the []byte of the picture
 
 	// Check that the downloaded data is the same as the uploaded data.
 	if !bytes.Equal(receivedContents, data) {
 		return fmt.Errorf("got different object back: %q != %q", data, receivedContents)
 	}
+
+	// // Tests to see if the file is legit
+	// f, err := os.OpenFile("./omgItWorks.png", os.O_WRONLY|os.O_CREATE, 0666)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
+	// defer f.Close()
+
+	// io.Copy(f, download)
+
+	// c, err := os.Create("omgItWorks.png")
+	// defer c.Close()
+	// if err != nil {
+	// 	// http.Error(w, err.Error(), http.StatusInternalServerError)
+	// 	// return
+	// }
+
+	// // Copy the uploaded file to the created file on the filesystem
+	// if _, err := io.Copy(c, data); err != nil {
+	// 	// http.Error(w, err.Error(), http.StatusInternalServerError)
+	// 	// return
+	// }
 
 	return nil
 }
@@ -155,30 +174,33 @@ func uploadFile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	print(dst)
-
 	// Converts *os.File into []byte
+	_, _ = dst.Seek(0, 0)
 	b, err := ioutil.ReadAll(dst)
 	if err != nil {
 		log.Fatal(err)
-	}
+	} //000000000
 
 	// Calls UploadData, which takes the given file and uploads it onto Storj
 	err = UploadData(context.Background(), b)
+	//err = UploadData(context.Background(), dst)
 	if err != nil {
 		log.Fatal(err)
 		return
 	}
 
-	// This code tests if the copy works
-	// f, err := os.OpenFile("./"+handler.Filename, os.O_WRONLY|os.O_CREATE, 0666)
+	// // This code tests if the copy works
+	// f, err := os.Create("omg2.png")
+	// defer f.Close()
 	// if err != nil {
-	// 	fmt.Println(err)
+	// 	http.Error(w, err.Error(), http.StatusInternalServerError)
 	// 	return
 	// }
-	// defer f.Close()
 
-	// io.Copy(f, file)
+	// if _, err := io.Copy(f, file); err != nil {
+	// 	http.Error(w, err.Error(), http.StatusInternalServerError)
+	// 	return
+	// }
 
 	fmt.Fprintf(w, "Successfully Uploaded File\n")
 	return
