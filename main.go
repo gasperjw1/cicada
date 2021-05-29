@@ -2,13 +2,14 @@ package main
 
 import (
 	"bytes"
-	"container/list"
 	"context"
 	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"reflect"
+	"strconv"
 	"strings"
 	"time"
 
@@ -26,11 +27,11 @@ import (
 // 	templates.ExecuteTemplate(w, page+".html", data)
 // }
 
-func displayAll(w http.ResponseWriter, r *http.Request) (int[] , error) {
+func displayAll(w http.ResponseWriter, r *http.Request) ([]int, error) { // (int[] , error)
 
 	ctx := context.Background()
 
-	var sliceOfObj []int = make([]int,0)
+	var sliceOfObj []int = make([]int, 0)
 
 	//Gets access grant stored in .env
 	var envs map[string]string
@@ -45,13 +46,13 @@ func displayAll(w http.ResponseWriter, r *http.Request) (int[] , error) {
 	// Parse the Access Grant.
 	access, err := uplink.ParseAccess(accessGrant)
 	if err != nil {
-		return fmt.Errorf("could not parse access grant: %v", err)
+		return nil, fmt.Errorf("could not parse access grant: %v", err)
 	}
 
 	// Creates a project using our access
 	project, err := uplink.OpenProject(ctx, access)
 	if err != nil {
-		return fmt.Errorf("could not open project: %v", err)
+		return nil, fmt.Errorf("could not open project: %v", err)
 	}
 	defer project.Close()
 
@@ -61,20 +62,27 @@ func displayAll(w http.ResponseWriter, r *http.Request) (int[] , error) {
 	// Ensure the desired Bucket within the Project is created.
 	_, err = project.EnsureBucket(ctx, bucketName)
 	if err != nil {
-		return fmt.Errorf("could not ensure bucket: %v", err)
+		return nil, fmt.Errorf("could not ensure bucket: %v", err)
 	}
 
+	// Gets the list of objects currently in Storj and puts them into a list
 	objects := project.ListObjects(ctx, "bucket1", nil)
 	for objects.Next() {
 		item := objects.Item()
+		k, e := strconv.Atoi(item.Key)
+		if e != nil {
+			return nil, e
+		}
 		fmt.Println(item.IsPrefix, item.Key)
-		sliceOfObj = append(sliceOfObj, item.Key)
+		sliceOfObj = append(sliceOfObj, k)
 	}
 	if err := objects.Err(); err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	fmt.Println(reflect.TypeOf(sliceOfObj))
+
+	return sliceOfObj, nil
 }
 
 // UploadData uploads the data to objectKey in bucketName, using accessGrant.
@@ -161,7 +169,7 @@ func UploadData(ctx context.Context, data []byte) error {
 		return fmt.Errorf("could not read data: %v", err)
 	}
 
-	print(receivedContents) //Shows the []byte of the picture
+	fmt.Println(receivedContents) //Shows the []byte of the picture
 
 	// Check that the downloaded data is the same as the uploaded data.
 	if !bytes.Equal(receivedContents, data) {
@@ -280,7 +288,7 @@ func downloadHandler(w http.ResponseWriter, r *http.Request) {
 		// display(w, "upload", nil)
 		displayAll(w, r)
 	case "POST":
-		downloadFile(w, r)
+		// downloadFile(w, r)
 	}
 }
 

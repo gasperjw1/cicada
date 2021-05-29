@@ -9,7 +9,7 @@ import Display from './displayUpload';
 import './Upload.css'
 
 const Upload = () => {
-    const userWallet = useSelector(state=>state.walletReducer)
+    const userWallet = useSelector(state=>state.walletList)
 
     const [selectedFile, uploadFile] = useState([])
     const [fileName, setFileName] = useState('Choose File')
@@ -60,7 +60,7 @@ const Upload = () => {
                     <div className='user-info-container'>
                         <img src={user} alt='user.png' className="user-wrapper"/>
                         <div className="user-wallet-wrapper">0x916c5F7ddcce69F0…f1e2a4f</div>
-                        {console.log('Wallets:', userWallet)}
+                        {console.log('Wallets:', userWallet.wallets.accounts)}
                     </div>
                     <div className="upload-file-wrapper">
                         <form className="form-wrapper">
