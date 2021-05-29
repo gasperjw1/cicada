@@ -206,7 +206,12 @@ func uploadFile(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
+func enableCors(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+}
+
 func uploadHandler(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	switch r.Method {
 	case "GET":
 		display(w, "upload", nil)
