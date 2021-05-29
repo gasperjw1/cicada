@@ -2,7 +2,7 @@ import { WALLET_FAIL, WALLET_REQUEST, WALLET_SUCCESS }  from '../Constants/walle
 import { REHYDRATE } from 'redux-persist'
 
 
-export const walletReducer = (state= { wallets: [] }, action) => {
+export const walletReducer = (state={ wallets:[]}, action) => {
     switch (action.type){
         case WALLET_REQUEST:
             return { loading: true, wallets: [] }
