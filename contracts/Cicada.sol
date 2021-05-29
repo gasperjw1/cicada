@@ -39,7 +39,7 @@ contract Cicada is AccessControl {
   function registerUser() external {
     _setupRole(REGISTERED_USER, msg.sender);
     _storageAllowance[msg.sender] = 1; // allot users 1gb of free storage
-    _timeAllowance[msg.sender] = 31 days;
+    _timeAllowance[msg.sender] = block.timestamp + 31 days;
   }
 
   /*
@@ -49,7 +49,7 @@ contract Cicada is AccessControl {
     require(block.timestamp - _timeAllowance[msg.sender] > 0, "You still have an active subscription");
     require(msg.value == monthlyFee, "You did not pay the correct amount");
 
-    _timeAllowance[msg.sender] += 31 days;
+    _timeAllowance[msg.sender] = block.timestamp + 31 days;
   }
 
   /*
