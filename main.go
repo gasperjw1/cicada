@@ -68,6 +68,10 @@ func UploadData(ctx context.Context, data []byte) error {
 		return fmt.Errorf("could not ensure bucket: %v", err)
 	}
 
+
+
+	bucket, err := project.GetBucket(ctx, bucketName)
+
 	// Intitiate the upload of our Object to the specified bucket and key.
 	upload, err := project.UploadObject(ctx, bucketName, objectKey, nil)
 	if err != nil {
@@ -141,6 +145,8 @@ func UploadData(ctx context.Context, data []byte) error {
 	// 	// http.Error(w, err.Error(), http.StatusInternalServerError)
 	// 	// return
 	// }
+
+	defer bucket.Close()
 
 	return nil
 }
@@ -226,7 +232,7 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 func serveFromStorj(objectKey string) (*uplink.Download, error) {
 
 	ctx := context.Background()
-	s
+
 	//Gets access grant stored in .env
 	var envs map[string]string
 	envs, err := godotenv.Read(".env")
