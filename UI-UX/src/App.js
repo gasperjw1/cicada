@@ -12,7 +12,7 @@ function App() {
   const connect = () => {
     web3.eth.getAccounts((error, accounts) => {
       console.log(accounts);
-      dispatch({type: WALLET_SUCCESS, payload:{accounts}})
+      dispatch({type: WALLET_SUCCESS, payload:accounts})
     });
   }
 

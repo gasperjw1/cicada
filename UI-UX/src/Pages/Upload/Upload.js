@@ -59,8 +59,11 @@ const Upload = () => {
                     <div className="top-container">  
                     <div className='user-info-container'>
                         <img src={user} alt='user.png' className="user-wrapper"/>
-                        <div className="user-wallet-wrapper">0x916c5F7ddcce69F0…f1e2a4f</div>
-                        {console.log('Wallets:', userWallet.wallets.accounts)}
+                        {
+                            userWallet.wallets
+                            ?<div className="user-wallet-wrapper">{userWallet.wallets}</div>
+                            : null
+                        }
                     </div>
                     <div className="upload-file-wrapper">
                         <form className="form-wrapper">
