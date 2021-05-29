@@ -1,21 +1,42 @@
 import React, { useState } from 'react'
+import axios from 'axios'
 import './Upload.css'
 
 const Upload = () => {
 
-    const [selectedFile, uploadFile] = useState('')
+    const [selectedFile, uploadFile] = useState([])
+    const [fileName, setFileName] = useState('Choose File')
 
     const onFileChange = (event) => {
-        uploadFile(event.target.files[0])
+        uploadFile([...selectedFile, event.target.files[0]])
+        setFileName(event.target.files[0])
         console.log(selectedFile)
+    }
+
+    const submitUploads = async (event) => {
+        event.preventDefault()
+
+        try {
+            var i
+            for (i=0; i < selectedFile.length; i++)
+            {
+                const formData = new FormData()
+                formData.append('fileName', selectedFile[i])
+                const res = await axios.post('/upload', formData)
+                console.log('its sent')
+            }
+        } catch (error) {
+            
+        }
     }
     
     return (
         <div className='Container'>
             <div className='Upload'>
-                <input type='file' onChange={onFileChange}/>
-
-                <button>Upload</button>
+                <form onSubmit={submitUploads}>
+                    <input type='file' onChange={onFileChange}/>
+                    <input type='submit' value='Upload'/>
+                </form>
             </div>
             
         </div>
