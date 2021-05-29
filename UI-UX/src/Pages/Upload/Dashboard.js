@@ -34,7 +34,7 @@ const Dashboard = () => {
         try {
             var i
             for (i=0; i < selectedFile.length; i++)
-            {
+            {   
                 const formData = new FormData()
                 formData.append({
                     'size' : selectedFile[i].size.toString(),
@@ -111,7 +111,7 @@ const Dashboard = () => {
                                     id='file'
                                     onChange={onFileChange}
                                     />
-                                    <label className="upload-file" for="file"> <img className="upload-img"src={upload2} alt="upload.png"/> Choose a file</label>
+                                    <label className="upload-file" htmlFor="file"> <img className="upload-img"src={upload2} alt="upload.png"/> Choose a file</label>
                                     <input className="upload-button"type='submit' value='Upload'></input>
                                 </form>
                             </div>

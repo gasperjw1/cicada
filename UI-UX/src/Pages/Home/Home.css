@@ -32,11 +32,10 @@
 
 .text-wrapper{
     width: 40%;
-    align-items: start;
+    align-items: flex-start;
     display: flex;
     flex-direction: column;
     z-index:2;
-    align-items: start;
     justify-content: center;
     margin-left: 5rem;  
     
@@ -131,6 +130,14 @@
     display: flex;
     color: #001030;
     flex-direction: column;
+}
+
+.right-fotter{
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: right;
+
 }
 
 .stable-logo{

@@ -9,10 +9,10 @@ const Display = (props) => {
                     console.log( fileHandle.type);
                     return(
                         <div key={`${fileHandle}${index}`} className="display-files" >
-                            <p>{fileHandle.name}</p>|
-                            <p>{fileHandle.size}</p>|
-                            <p>{fileHandle.type}</p>|
-                            <p>{fileHandle.lastModifiedDate.toString()}</p>
+                            <p>{fileHandle.name}</p>
+                            <p>{fileHandle.size} bytes</p>
+                            {/* <p>{fileHandle.type}</p> */}
+                            <p>Upload date:{Date()}</p>
                             <div className="X-container"  onClick={()=>props.removeFile(index)}/>
                     </div>
                     );
