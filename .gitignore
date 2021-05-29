@@ -105,4 +105,8 @@ dist
 
 # Contract files
 build/contracts
+
+# Other shit
+package-lock.json
+.o
 .DS_Store

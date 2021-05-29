@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/StableSoftworks/cicada/issues"
   },
-  "homepage": "https://github.com/StableSoftworks/cicada#readme"
+  "homepage": "https://github.com/StableSoftworks/cicada#readme",
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.1.0"
+  }
 }
