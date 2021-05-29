@@ -15,27 +15,55 @@ nav{
     display:flex;
     align-items: center;
     padding:10px 50px;
+    background:white;
 }
 
 .logo{
     display:inline-block;
     font-size:20px;
-    margin-left:2.45rem;
+    margin-left:1.9rem;
+}
+
+.nav-item{
+    margin-right:1rem;
+    cursor: pointer;
+    position:relative;
+}
+
+
+
+.underline{
+    position:absolute;
+    top:110%;
+    width:100%;
+    border-radius:1rem;
+    border:2px solid black;
+    transform-origin: center;
+    transform:scaleX(0);
+    transition: transform 0.5s ease;
+}
+
+.underline.active-nav-item{
+    transform:scaleX(1);
+}
+
+.nav-item:nth-child(2){
+    margin-left:auto;
 }
 
 .connect-portis-button{
     padding:5px 10px;
     display:inline-block;
-    margin-left:auto;
-    border: 2px solid rgba(108, 23, 177,0.8); 
-    color:rgb(108, 23, 177);
-    font-size: 20px;
+    border: 2px solid #001030;
+    color:#001030;
+    font-size: 15px;
     border-radius:0.3rem;
     transition: all 100ms ease-out;
-    text-transform: capitalize;
+    text-transform: capitalize; 
+    background-color: transparent;
 }
 
 .connect-portis-button:hover{
     color:white;
-    background-color:rgb(108, 23, 177); 
+    background-color:#001030; 
 }
