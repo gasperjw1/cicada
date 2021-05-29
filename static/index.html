@@ -1,14 +1,18 @@
-
-
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
-    <title>Static Website</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Upload File</title>
   </head>
   <body>
-    <h2>Static Website</h2>
-    <form action="/upload-file" method="POST">
-      <input type="file" name="uploadfile" />
-      <input type="hidden" name="token" value="{{.}}"/>
+    <form
+      enctype="multipart/form-data"
+      action="http://localhost:8080/upload"
+      method="post"
+    >
+      <input type="file" name="myFile" />
       <input type="submit" value="upload" />
     </form>
   </body>
