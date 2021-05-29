@@ -30,10 +30,12 @@ export default function Nav(props){
 
     return(
         <nav>
+            <Link to="/" target="_self">
             <div className="logo" onClick={clear_underline}>
                 <img src={logo} className="logo-img" alt='logo.png'/>
-                <Link to="/" target="_self">Cicada-Drop</Link>
+                Cicada-Drop
             </div>
+            </Link>
             <div className="nav-item pricing">
                 <div className="underline"/>
                 <Link to="/pricing" target="_self">Pricing</Link>

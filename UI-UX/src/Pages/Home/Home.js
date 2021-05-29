@@ -30,6 +30,17 @@ export default function Home(){
 
                     </div>
                 </div>
+                <div className="foot-note">
+                    <div className="foot-note-wrapper">
+                        <div className="left-footer">
+                            <h1>Powered by: </h1>
+                        </div>
+                        <div className="right-fotter">
+
+                        </div>   
+                    </div>
+
+                </div>
             </section>
         </>
     );
