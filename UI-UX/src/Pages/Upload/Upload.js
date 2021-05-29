@@ -22,22 +22,53 @@ const Upload = () => {
             {
                 const formData = new FormData()
                 formData.append('fileName', selectedFile[i])
-                const res = await axios.post('/upload', formData)
+                const res = await axios.post('/upload', formData, {
+                    headers: {
+                        'Content-Type':'multipart/form-data'
+                    }
+                });
                 console.log('its sent')
             }
         } catch (error) {
             
         }
     }
+
+    const removeFile = (idx) => {
+
+        uploadFile( selectedFile.filter((file,index)=>{
+            console.log(index)
+
+            return index != idx;
+        }));
+
+    }
     
     return (
         <div className='Container'>
+
             <div className='Upload'>
                 <form onSubmit={submitUploads}>
                     <input type='file' onChange={onFileChange}/>
                     <input type='submit' value='Upload'/>
                 </form>
+                <button onClick={()=>{console.log(selectedFile)}}>selected file</button>
             </div>
+            <div className="display-files-container">
+                {
+                    selectedFile.map((fileHandle,index)=>{
+                    
+                        return(
+                            <div key={`${fileHandle}${index}`} className="display-files" >
+                                <p>{fileHandle.name}</p>
+                                <p>{fileHandle.lastModifiedDate.toString()}</p>
+                                <div className="X-container"  onClick={()=>removeFile(index)}/>
+                            </div>
+                        );
+                    })
+                }
+            </div>
+                
             
         </div>
     )
