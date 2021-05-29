@@ -8,8 +8,9 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"reflect"
-	"strconv"
+	"os"
+
+	// "strconv"
 	"strings"
 	"time"
 
@@ -17,6 +18,8 @@ import (
 	// "github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 	"github.com/rs/cors"
+	//"storj.io/storj/lib/uplink"
+	//"storj.io/storj/pkg/storj"
 )
 
 // // Compile templates on start of the application
@@ -66,21 +69,21 @@ func displayAll(w http.ResponseWriter, r *http.Request) ([]int, error) { // (int
 	}
 
 	// Gets the list of objects currently in Storj and puts them into a list
-	objects := project.ListObjects(ctx, "bucket1", nil)
-	for objects.Next() {
-		item := objects.Item()
-		k, e := strconv.Atoi(item.Key)
-		if e != nil {
-			return nil, e
-		}
-		fmt.Println(item.IsPrefix, item.Key)
-		sliceOfObj = append(sliceOfObj, k)
-	}
-	if err := objects.Err(); err != nil {
-		return nil, err
-	}
+	// objects := project.ListObjects(ctx, "bucket1", nil)
+	// for objects.Next() {
+	// 	item := objects.Item()
+	// 	k, e := strconv.Atoi(item.Key)
+	// 	if e != nil {
+	// 		return nil, e
+	// 	}
+	// 	fmt.Println(item.IsPrefix, item.Key)
+	// 	sliceOfObj = append(sliceOfObj, k)
+	// }
+	// if err := objects.Err(); err != nil {
+	// 	return nil, err
+	// }
 
-	fmt.Println(reflect.TypeOf(sliceOfObj))
+	//fmt.Println(reflect.TypeOf(sliceOfObj))
 
 	return sliceOfObj, nil
 }
@@ -117,6 +120,7 @@ func UploadData(ctx context.Context, data []byte) error {
 	var objectKey string = time.Now().Format("2006-01-02 15:04:05")
 	objectKey = strings.Replace(objectKey, ":", "-", -1)
 	objectKey = strings.Replace(objectKey, " ", "_", -1)
+	//objectKey = objectKey + ".png"
 
 	// Ensure the desired Bucket within the Project is created.
 	_, err = project.EnsureBucket(ctx, bucketName)
@@ -176,6 +180,8 @@ func UploadData(ctx context.Context, data []byte) error {
 		return fmt.Errorf("got different object back: %q != %q", data, receivedContents)
 	}
 
+	// print("cheese rice")
+
 	// // Tests to see if the file is legit
 	// f, err := os.OpenFile("./omgItWorks.png", os.O_WRONLY|os.O_CREATE, 0666)
 	// if err != nil {
@@ -184,6 +190,54 @@ func UploadData(ctx context.Context, data []byte) error {
 	// defer f.Close()
 
 	// io.Copy(f, download)
+
+	buffer := bytes.NewBuffer(receivedContents)
+
+	fo, err := os.Create("output.txt")
+	// if _, err := fo.Write(buffer); err != nil {
+	// 	panic(err)
+	// }
+	if _, err := io.Copy(fo, buffer); err != nil {
+		panic(err)
+	}
+
+	//permissions := 0644
+	// err = ioutil.WriteFile("yer.txt", receivedContents[40:], 0644)
+	// if err != nil {
+	// 	return fmt.Errorf("could not write data: %v", err)
+	// }
+
+	// f, err := os.Open("inputimage.jpg")
+	// if err != nil {
+	// 	// Handle error
+	// }
+	// defer f.Close()
+
+	// img, fmtName, err := image.Decode(download)
+	// if err != nil {
+	// 	// Handle error
+	// 	print("oof 1")
+	// 	return err
+	// }
+
+	// print(fmtName)
+
+	// f, err := os.Create("outimage.png")
+	// if err != nil {
+	// 	// Handle error
+	// 	print("oof 2")
+	// 	return err
+	// }
+	// defer f.Close()
+
+	// // Encode to `PNG` with `DefaultCompression` level
+	// // then save to file
+	// err = png.Encode(f, img)
+	// if err != nil {
+	// 	// Handle error
+	// 	print("oof 3")
+	// 	return err
+	// }
 
 	// c, err := os.Create("omgItWorks.png")
 	// defer c.Close()
@@ -234,16 +288,59 @@ func uploadFile(w http.ResponseWriter, r *http.Request) {
 	// }
 
 	// Converts *os.File into []byte
-	dst := r.Body
-	defer dst.Close()
-	// _, _ = dst.Seek(0, 0)
-	b, err := ioutil.ReadAll(dst)
+
+	// bDst := r.Body
+
+	// defer bDst.Close()
+	// _, _ = bDst.Seek(0, 0)
+	// b, err := ioutil.ReadAll(bDst)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// } //000000000
+
+	// buf := bytes.NewBuffer(b)
+	// print(buf)
+
+	reader, err := r.MultipartReader()
 	if err != nil {
-		log.Fatal(err)
-	} //000000000
+		print("yer 1")
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// parse text field
+	text := make([]byte, 512)
+
+	p, err := reader.NextPart()
+	// one more field to parse, EOF is considered as failure here
+	if err != nil {
+		print("yer 2")
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	// if p.FormName() != "text_field" {
+	// 	http.Error(w, "text_field is expected", http.StatusBadRequest)
+	// 	return
+	// }
+
+	_, err = p.Read(text)
+	if err != nil && err != io.EOF {
+		print("yer 3")
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	//dst := r.Body
+	dst := text
+	// defer dst.Close()
+	// // _, _ = dst.Seek(0, 0)
+	// b, err := ioutil.ReadAll(dst)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// } //000000000
 
 	// Calls UploadData, which takes the given file and uploads it onto Storj
-	err = UploadData(context.Background(), b)
+	err = UploadData(context.Background(), dst)
 	//err = UploadData(context.Background(), dst)
 	if err != nil {
 		log.Fatal(err)
@@ -258,7 +355,7 @@ func uploadFile(w http.ResponseWriter, r *http.Request) {
 	// 	return
 	// }
 
-	// if _, err := io.Copy(f, file); err != nil {
+	// if _, err := io.Copy(f, dst); err != nil {
 	// 	http.Error(w, err.Error(), http.StatusInternalServerError)
 	// 	return
 	// }
