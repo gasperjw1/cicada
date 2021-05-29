@@ -8,7 +8,7 @@ contract Cicada is AccessControl {
 
   uint256 public memoryRate; // cost of memory per gb in wei
   uint256 public monthlyFee;
-  bytes32 public constant REGISTERED_USER = keccak256("REGISTERED_USER");
+  bytes32 public constant REGI  STERED_USER = keccak256("REGISTERED_USER");
 
   constructor(uint256 initRate, uint256 monthly) {
     _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);

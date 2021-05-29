@@ -22,7 +22,7 @@ const Upload = () => {
             {
                 const formData = new FormData()
                 formData.append('fileName', selectedFile[i])
-                const res = await axios.post('/upload', formData, {
+                const res = await axios.post('http://localhost:3001/upload', formData, {
                     headers: {
                         'Content-Type':'multipart/form-data'
                     }
@@ -49,7 +49,7 @@ const Upload = () => {
 
             <div className='Upload'>
                 <form onSubmit={submitUploads}>
-                    <input type='file' onChange={onFileChange}/>
+                    <input name='myFile' type='file' onChange={onFileChange}/>
                     <input type='submit' value='Upload'/>
                 </form>
                 <button onClick={()=>{console.log(selectedFile)}}>selected file</button>
