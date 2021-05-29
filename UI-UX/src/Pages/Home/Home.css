@@ -42,6 +42,12 @@
     
 }
 
+.logo-wallpaper{
+    width: 450px;
+    object-fit: contain;
+    margin-left: 350px;
+    opacity: .87;
+}
 
 
 .text-holder{

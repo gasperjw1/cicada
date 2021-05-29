@@ -16,21 +16,33 @@ nav{
     align-items: center;
     padding:10px 50px;
     background:white;
+    z-index: 1000;
 }
 
 nav a{
     text-decoration: none;
     color:unset;
 }
+.logo-text{
+    margin: 0 auto;
+}
 
 .logo{
     display:inline-block;
     font-size:20px;
     margin-left:1.9rem;
+    display:flex;
+    align-items:center;
+}
+
+.logo-img{
+    width: 2rem;
+    margin: 0 auto;
+    margin-right: .5em;
 }
 
 .nav-item{
-    margin-right:1rem;
+    margin-right:2.5rem;
     cursor: pointer;
     position:relative;
 }
@@ -42,7 +54,7 @@ nav a{
     top:110%;
     width:100%;
     border-radius:1rem;
-    border:2px solid black;
+    border:1px solid black;
     transform-origin: center;
     transform:scaleX(0);
     transition: transform 0.5s ease;

@@ -1,5 +1,6 @@
 import React,{useEffect} from 'react';
 import {Link} from 'react-router-dom';
+import logo from '../Assets/logo.png'
 import './Nav.css';
 
 export default function Nav(props){
@@ -25,21 +26,21 @@ export default function Nav(props){
             })
         })
     },[])
+
+
     return(
         <nav>
-
             <div className="logo" onClick={clear_underline}>
-                <Link to="/" target="_self">Cicada-Blockchain</Link>
+                <img src={logo} className="logo-img" alt='logo.png'/>
+                <Link to="/" target="_self">Cicada-Drop</Link>
             </div>
-
-            <div className="nav-item">
+            <div className="nav-item pricing">
                 <div className="underline"/>
                 <Link to="/pricing" target="_self">Pricing</Link>
             </div>
-            <div className="nav-item">
+            <div className="nav-item upload">
                 <div className="underline"/>
                 <Link to="/upload" target="_self">Upload</Link>
-               
             </div>
             <button className="connect-portis-button" onClick={props.connect_wall} >
                 Connect Portis

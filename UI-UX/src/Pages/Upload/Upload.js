@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import axios from 'axios'
 import { useSelector} from 'react-redux'
 import user from '../../Assets/user.png'
@@ -19,6 +19,11 @@ const Upload = () => {
         setFileName(event.target.files[0])
         console.log(selectedFile)
     }
+
+    useEffect(()=>{
+        const setNav = document.querySelector('.pricing');
+        setNav.childNodes[0].classList.add('active-nav-item');
+    },[])
 
 
     const submitUploads = async (event) => {

@@ -2,6 +2,7 @@ import React from 'react';
 import './Home.css';
 import Particles from 'react-particles-js';
 import para from './particles.json'
+import logo from '../../Assets/logo2.png'
 
 export default function Home(){
     return(
@@ -22,6 +23,7 @@ export default function Home(){
                             Upload Files
                         </div>
                     </div>
+                    <img src={logo} alt='logo2.png' className='logo-wallpaper'/> 
                 </div>
                 <div className="info-wrapper">
                     <div className="info-container">
