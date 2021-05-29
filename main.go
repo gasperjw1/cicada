@@ -14,8 +14,9 @@ import (
 	"time"
 
 	"storj.io/uplink"
-
+	// "github.com/gorilla/mux"
 	"github.com/joho/godotenv"
+	"github.com/rs/cors"
 )
 
 // Compile templates on start of the application
@@ -221,18 +222,23 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	mux := http.NewServeMux()
+	// mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	//     w.Header().Set("Content-Type", "application/json")
+	//     w.Write([]byte("{\"hello\": \"world\"}"))
+	// })
 
 	// just a test page
 	fileServer := http.FileServer(http.Dir("./static"))
 	http.Handle("/", fileServer)
 
 	// Upload route
-	http.HandleFunc("/upload", uploadHandler)
-
+	mux.HandleFunc("/upload", uploadHandler)
+	handler := cors.Default().Handler(mux)
 	fmt.Printf("Starting server at port 8080\n")
 	// fmt.Printf(poof)
 
-	if err := http.ListenAndServe(":3001", nil); err != nil {
+	if err := http.ListenAndServe(":8080", handler); err != nil {
 		log.Fatal(err)
 	}
 
