@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"image"
 	"image/jpeg"
@@ -86,6 +87,11 @@ func displayAll(w http.ResponseWriter, r *http.Request) ([]int, error) { // (int
 	// }
 
 	//fmt.Println(reflect.TypeOf(sliceOfObj))
+
+	theJSON, err := json.Marshal(sliceOfObj)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(theJSON)
 
 	return sliceOfObj, nil
 }
