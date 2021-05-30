@@ -53,7 +53,7 @@ func displayAll(w http.ResponseWriter, r *http.Request) ([]int, error) { // (int
 	defer project.Close()
 
 	// Creates the bucketName and objectKey variables to be used later
-	var bucketName string = "bucket1"
+	var bucketName string = "bucket2"
 
 	// Ensure the desired Bucket within the Project is created.
 	_, err = project.EnsureBucket(ctx, bucketName)
