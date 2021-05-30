@@ -10,6 +10,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 
 	// "strconv"
 	"strings"
@@ -62,19 +63,19 @@ func displayAll(w http.ResponseWriter, r *http.Request) ([]int, error) { // (int
 	}
 
 	// Gets the list of objects currently in Storj and puts them into a list
-	// objects := project.ListObjects(ctx, "bucket1", nil)
-	// for objects.Next() {
-	// 	item := objects.Item()
-	// 	k, e := strconv.Atoi(item.Key)
-	// 	if e != nil {
-	// 		return nil, e
-	// 	}
-	// 	fmt.Println(item.IsPrefix, item.Key)
-	// 	sliceOfObj = append(sliceOfObj, k)
-	// }
-	// if err := objects.Err(); err != nil {
-	// 	return nil, err
-	// }
+	objects := project.ListObjects(ctx, "bucket2", nil)
+	for objects.Next() {
+		item := objects.Item()
+		k, e := strconv.Atoi(item.Key)
+		if e != nil {
+			return nil, e
+		}
+		fmt.Println(item.IsPrefix, item.Key)
+		sliceOfObj = append(sliceOfObj, k)
+	}
+	if err := objects.Err(); err != nil {
+		return nil, err
+	}
 
 	//fmt.Println(reflect.TypeOf(sliceOfObj))
 
@@ -145,7 +146,10 @@ func UploadData(ctx context.Context, data []byte, dataType string) error {
 		return fmt.Errorf("could not commit uploaded object: %v", err)
 	}
 
-	// Test to see what is uploaded in our bucket
+	print("\nNew name of the uploaded file is: " + objectKey + "\n\n")
+	print("\n now the files in the bucket are as follows: \n")
+
+	// // Test to see what is uploaded in our bucket
 	// objects := project.ListObjects(ctx, "bucket1", nil)
 	// for objects.Next() {
 	// 	item := objects.Item()
@@ -166,8 +170,6 @@ func uploadFile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	print(file)
-	print(header)
 	fmt.Printf("Uploaded File: %+v\n", header.Filename)
 	fmt.Printf("File Size: %+v\n", header.Size)
 	fmt.Printf("MIME Header: %+v\n", header.Header)
@@ -176,8 +178,6 @@ func uploadFile(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	print("yerrr" + strings.Split(header.Filename, ".")[1])
 
 	// Calls UploadData, which takes the given file and uploads it onto Storj
 	err = UploadData(context.Background(), b, "."+strings.Split(header.Filename, ".")[1])
