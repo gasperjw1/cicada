@@ -87,3 +87,16 @@ nav a:first-child{
     color:white;
     background-color:#001030; 
 }
+
+.wallet-icon{   
+    height: 40px;
+    display: flex;
+    align-items: center;
+}
+
+.img-wrapper{
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+    margin-left: 1em;
+}

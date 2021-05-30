@@ -3,6 +3,7 @@ import { WALLET_SUCCESS } from './Redux/Constants/walletConstants'
 import { useDispatch, useSelector } from 'react-redux'
 import Home from './Pages/Home/Home.js';
 import Dashboard from './Pages/Upload/Dashboard'
+import Pricing from './Pages/Pricing/Pricing'
 import Nav from './Nav/Nav.js';
 import { web3, portis } from './services/web3'
 import { ethers } from 'ethers'
@@ -50,6 +51,7 @@ function App() {
         <Switch>
           <Route path='/' exact component={Home}/>
           <Route path='/dashboard' exact component={Dashboard}/>
+          <Route path='/pricing' exact component={Pricing}/>
         </Switch>
       </div>
     </Router>

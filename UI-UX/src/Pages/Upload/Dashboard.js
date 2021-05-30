@@ -6,6 +6,7 @@ import uploadIcon from '../../Assets/uploadicon.png'
 import myfilesIcon from '../../Assets/myfilesicon.png'
 import upload2 from '../../Assets/upload2.png'
 import Display from './displayUpload';
+import Download_Icon from '../../Assets/download.png';
 
 import './Dashboard.css'
 
@@ -22,6 +23,8 @@ const Dashboard = () => {
         console.log(selectedFile)
     }
 
+
+
     useEffect(()=>{
         const setNav = document.querySelector('.upload');
         setNav.childNodes[0].classList.add('active-nav-item');
@@ -29,7 +32,7 @@ const Dashboard = () => {
 
 
     const submitUploads = async (event) => {
-        event.preventDefault()
+        event.preventDefault();
 
         try {
             var i
@@ -51,6 +54,16 @@ const Dashboard = () => {
         }
     }
 
+    const getMyFile = async (event) =>{
+        event.preventDefault();
+        try {
+            const res = await axios.get('http://localhost:8080/download')
+            const data = await res;
+            console.log(data);
+        } catch (error){
+
+        }
+    }
     const removeFile = (idx) => {
 
         uploadFile( selectedFile.filter((file,index)=>{
@@ -127,31 +140,20 @@ const Dashboard = () => {
                         
                     :<div className="display-my-files">
                         <div className="my-files-container">
-                            <div className="fluff"/>
-                            <div className="fluff"/>
-                            <div className="fluff"/>
-                            <div className="fluff"/>
-                            <div className="fluff"/>
-                            <div className="fluff"/>
-                            <div className="fluff"/>
-                            <div className="fluff"/>
-                            <div className="fluff"/>
-                            <div className="fluff"/>
-                            <div className="fluff"/>
-                            <div className="fluff"/>
-                            <div className="fluff"/>
-                            <div className="fluff"/>
-                            <div className="fluff"/>
-                            <div className="fluff"/>
-                            <div className="fluff"/>
-                            <div className="fluff"/>
-                            <div className="fluff"/>
+                            <div className="my-file-item">
+                                <div className="file-handle"> the one asdasd randy's adjhbajdkfhbakjjdadsadaskjdaskjdasjdhasakjshdnfkjbs Resume.pdf</div>
+                                <div className="date-uploaded">date Uploaded</div>
+                                <div className="file-size">file size</div>
+                                <img className="download-icon" src={Download_Icon} alt="download.png"/>
+                            </div>
+                            
                         </div>
                     </div>
+                    
                 }
                 </div>
             </div>
-    )
+    );
 }
 
 export default Dashboard
