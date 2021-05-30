@@ -90,17 +90,17 @@ const Dashboard = () => {
     const setViewNT = () =>{
         setViewFiles(false);
     }
-    // if(!userWallet.wallets){
-    //     return(
-    //         <>
-    //             <div ClassName="no-account-landing">
-    //                 <p>Sorry, no account has been detected. If you don't have an account please register with PORTIS. If you are not subrcribed please consider doing so. Click here for more information PRICING</p>
+    if(!userWallet.wallets){
+        return(
+            <>
+                <div ClassName="no-account-landing">
+                    <p>Sorry, no account has been detected. If you don't have an account please register with PORTIS. If you are not subrcribed please consider doing so. Click here for more information PRICING</p>
 
-    //             </div>
+                </div>
                     
-    //         </>
-    //     )
-    // }
+            </>
+        )
+    }
     return (
         <div className='Container'>
             <div className='upload-container'>
