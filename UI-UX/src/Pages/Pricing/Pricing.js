@@ -7,10 +7,10 @@ import { web3, portis } from '../../services/web3'
 import { ethers } from 'ethers'
 
 const Pricing = () => {
-    const [storageSpace, setStorageSpace] = useState(0);
+    const [storageSpace, setStorageSpace] = useState(1);
     const setStorage = (bytes) =>{
         if(bytes === -1){
-            setStorageSpace(0);
+            setStorageSpace(1);
             return;
         }
 
@@ -42,6 +42,7 @@ const Pricing = () => {
 
     const addStorage = async () => {
         const rate = await contract.memoryRate()
+        console.log(rate * storageSpace)
         web3.eth.sendTransaction({
             from: wallets[0],
             to: address,

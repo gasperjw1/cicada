@@ -54,10 +54,20 @@ const Dashboard = () => {
         }
     }
 
+    const displayFiles = async () => {
+        try {
+            const res = await axios.get(`http://localhost:8080/display`)
+            const data = await res;
+            console.log(data);
+        } catch (error){
+
+        }
+    }
+
     const getMyFile = async (event) =>{
         event.preventDefault();
         try {
-            const res = await axios.get('http://localhost:8080/download')
+            const res = await axios.get(`http://localhost:8080/download?uuid=${event}`)
             const data = await res;
             console.log(data);
         } catch (error){
@@ -139,12 +149,14 @@ const Dashboard = () => {
                     </div>
                         
                     :<div className="display-my-files">
+                        <button onClick={displayFiles} >display</button>
+                      
                         <div className="my-files-container">
                             <div className="my-file-item">
                                 <div className="file-handle"> the one asdasd randy's adjhbajdkfhbakjjdadsadaskjdaskjdasjdhasakjshdnfkjbs Resume.pdf</div>
                                 <div className="date-uploaded">date Uploaded</div>
                                 <div className="file-size">file size</div>
-                                <img className="download-icon" src={Download_Icon} alt="download.png"/>
+                                <img className="download-icon" src={Download_Icon} alt="download.png" />
                             </div>
                             
                         </div>
