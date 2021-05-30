@@ -9,7 +9,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
 
 	// "strconv"
 	"strings"
@@ -155,36 +154,6 @@ func UploadData(ctx context.Context, data []byte, dataType string) error {
 	// 	return err
 	// }
 
-	// /////////////////////////// Tests if the image uploaded is the correct image
-
-	// Initiate a download of the same object again
-	download, err := project.DownloadObject(ctx, bucketName, objectKey, nil)
-	if err != nil {
-		return fmt.Errorf("could not open object: %v", err)
-	}
-	defer download.Close()
-
-	// Read everything from the download stream
-	receivedContents, err := ioutil.ReadAll(download)
-	if err != nil {
-		return fmt.Errorf("could not read data: %v", err)
-	}
-
-	fmt.Println(receivedContents) //Shows the []byte of the picture
-
-	// Check that the downloaded data is the same as the uploaded data.
-	if !bytes.Equal(receivedContents, data) {
-		return fmt.Errorf("got different object back: %q != %q", data, receivedContents)
-	}
-
-	buffer := bytes.NewBuffer(receivedContents)
-
-	fo, _ := os.Create("output" + dataType)
-
-	if _, err := io.Copy(fo, buffer); err != nil {
-		panic(err)
-	}
-
 	return nil
 }
 
@@ -221,6 +190,68 @@ func uploadFile(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
+func serveFromStorj(objectKey string) (*uplink.Download, error) {
+
+	ctx := context.Background()
+
+	//Gets access grant stored in .env
+	var envs map[string]string
+	envs, err := godotenv.Read(".env")
+
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	accessGrant := envs["STORJACCESSGRANT"]
+
+	// Parse the Access Grant.
+	access, err := uplink.ParseAccess(accessGrant)
+	if err != nil {
+		return nil, fmt.Errorf("could not parse access grant: %v", err)
+	}
+
+	// Creates a project using our access
+	project, err := uplink.OpenProject(ctx, access)
+	if err != nil {
+		return nil, fmt.Errorf("could not open project: %v", err)
+	}
+	defer project.Close()
+
+	// Creates the bucketName and objectKey variables to be used later
+	var bucketName string = "bucket2"
+
+	// Ensure the desired Bucket within the Project is created.
+	_, err = project.EnsureBucket(ctx, bucketName)
+	if err != nil {
+		return nil, fmt.Errorf("could not ensure bucket: %v", err)
+	}
+
+	// Initiate a download of the same object again
+	download, err := project.DownloadObject(ctx, bucketName, objectKey, nil)
+	if err != nil {
+		return nil, fmt.Errorf("could not open object: %v", err)
+	}
+	defer download.Close()
+
+	// // Read everything from the download stream
+	// receivedContents, err := ioutil.ReadAll(download)
+	// if err != nil {
+	// 	return nil, fmt.Errorf("could not read data: %v", err)
+	// }
+
+	// fmt.Println(receivedContents) //Shows the []byte of the picture
+
+	// buffer := bytes.NewBuffer(receivedContents)
+
+	// fo, _ := os.Create(objectKey)
+
+	// if _, err := io.Copy(fo, buffer); err != nil {
+	// 	panic(err)
+	// }
+
+	return download, nil
+}
+
 func enableCors(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
 }
@@ -241,6 +272,26 @@ func downloadHandler(w http.ResponseWriter, r *http.Request) {
 	case "GET":
 		displayAll(w, r)
 	case "POST":
+		query := r.URL.Query()
+		resp, err := serveFromStorj(query["uuid"][0]) // <----- get file based on file UID
+		if err != nil {
+			return
+		}
+
+		// Read everything from the download stream
+		receivedContents, err := ioutil.ReadAll(resp)
+		if err != nil {
+			return
+		}
+
+		// // Write the content to the desired file
+		// err = ioutil.WriteFile(query["uuid"][0], receivedContents, 0644)
+		// if err != nil {
+		// 	return
+		// }
+
+		w.WriteHeader(http.StatusOK)
+		w.Write(receivedContents)
 		// downloadFile(w, r)
 	}
 }
