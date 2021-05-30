@@ -14,7 +14,7 @@ function App() {
   const wallet = useSelector(state => state.walletList)
   const { wallets } = wallet
 
-  const connect = () => {
+  const connect = async () => {
     web3.eth.getAccounts((error, accounts) => {
       dispatch({type: WALLET_SUCCESS, payload:accounts})
     })
@@ -31,7 +31,7 @@ function App() {
         .then(status => {
           if (!status) {
             web3.eth.sendTransaction({
-              from: wallets[0],
+              from: accounts[0],
               to: address,
               data: new ethers.utils.Interface(abi).encodeFunctionData('registerUser')         
             })
