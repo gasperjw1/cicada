@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 
 	// "strconv"
 	"strings"
@@ -190,7 +191,7 @@ func uploadFile(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-func serveFromStorj(objectKey string) (*uplink.Download, error) {
+func serveFromStorj(objectKey string) (*os.File, error) {
 
 	ctx := context.Background()
 
@@ -233,23 +234,23 @@ func serveFromStorj(objectKey string) (*uplink.Download, error) {
 	}
 	defer download.Close()
 
-	// // Read everything from the download stream
-	// receivedContents, err := ioutil.ReadAll(download)
-	// if err != nil {
-	// 	return nil, fmt.Errorf("could not read data: %v", err)
-	// }
+	// Read everything from the download stream
+	receivedContents, err := ioutil.ReadAll(download)
+	if err != nil {
+		return nil, fmt.Errorf("could not read data: %v", err)
+	}
 
-	// fmt.Println(receivedContents) //Shows the []byte of the picture
+	fmt.Println(receivedContents) //Shows the []byte of the picture
 
-	// buffer := bytes.NewBuffer(receivedContents)
+	buffer := bytes.NewBuffer(receivedContents)
 
-	// fo, _ := os.Create(objectKey)
+	fo, _ := os.Create(objectKey)
 
-	// if _, err := io.Copy(fo, buffer); err != nil {
-	// 	panic(err)
-	// }
+	if _, err := io.Copy(fo, buffer); err != nil {
+		panic(err)
+	}
 
-	return download, nil
+	return fo, nil
 }
 
 func enableCors(w *http.ResponseWriter) {
@@ -270,8 +271,6 @@ func downloadHandler(w http.ResponseWriter, r *http.Request) {
 	enableCors(&w)
 	switch r.Method {
 	case "GET":
-		displayAll(w, r)
-	case "POST":
 		query := r.URL.Query()
 		resp, err := serveFromStorj(query["uuid"][0]) // <----- get file based on file UID
 		if err != nil {
@@ -279,10 +278,10 @@ func downloadHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Read everything from the download stream
-		receivedContents, err := ioutil.ReadAll(resp)
-		if err != nil {
-			return
-		}
+		// receivedContents, err := ioutil.ReadAll(resp)
+		// if err != nil {
+		// 	return
+		// }
 
 		// // Write the content to the desired file
 		// err = ioutil.WriteFile(query["uuid"][0], receivedContents, 0644)
@@ -290,9 +289,23 @@ func downloadHandler(w http.ResponseWriter, r *http.Request) {
 		// 	return
 		// }
 
+		theJSON, err := json.Marshal(resp)
+		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		w.Write(receivedContents)
+		w.Write(theJSON)
 		// downloadFile(w, r)
+	default:
+		print("wrong method")
+	}
+}
+
+func displayHandler(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+	switch r.Method {
+	case "GET":
+		displayAll(w, r)
+	default:
+		print("wrong method")
 	}
 }
 
@@ -305,6 +318,7 @@ func main() {
 
 	// Upload route
 	mux.HandleFunc("/upload", uploadHandler)
+	mux.HandleFunc("/display", displayHandler)
 	mux.HandleFunc("/download", downloadHandler)
 	handler := cors.Default().Handler(mux)
 
