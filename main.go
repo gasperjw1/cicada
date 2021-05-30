@@ -10,6 +10,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"reflect"
 	"strconv"
 
 	// "strconv"
@@ -77,12 +78,14 @@ func displayAll(w http.ResponseWriter, r *http.Request) ([]int, error) { // (int
 		return nil, err
 	}
 
-	//fmt.Println(reflect.TypeOf(sliceOfObj))
+	fmt.Println(reflect.TypeOf(sliceOfObj))
 
 	theJSON, err := json.Marshal(sliceOfObj)
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(theJSON)
+
+	print(sliceOfObj)
 
 	return sliceOfObj, nil
 }
@@ -303,7 +306,12 @@ func displayHandler(w http.ResponseWriter, r *http.Request) {
 	enableCors(&w)
 	switch r.Method {
 	case "GET":
-		displayAll(w, r)
+		cheif, err := displayAll(w, r)
+		if err != nil {
+			print(err)
+		}
+		print(cheif)
+
 	default:
 		print("wrong method")
 	}

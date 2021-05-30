@@ -29,6 +29,9 @@ const Dashboard = () => {
         const setNav = document.querySelector('.upload');
         setNav.childNodes[0].classList.add('active-nav-item');
     },[])
+    const clearSelectFiles = () =>{
+        uploadFile([]);
+    }
 
 
     const submitUploads = async (event) => {
@@ -49,6 +52,7 @@ const Dashboard = () => {
                 });
                 console.log('its sent')
             }
+            clearSelectFiles();
             } catch (error) {
             
         }
@@ -56,11 +60,11 @@ const Dashboard = () => {
 
     const displayFiles = async () => {
         try {
-            const res = await axios.get(`http://localhost:8080/display`)
-            const data = await res;
-            console.log(data);
+            console.log('its going here')
+            const res = await axios.get('http://localhost:8080/display')
+            console.log(res);
         } catch (error){
-
+            console.log("failed get files")
         }
     }
 
@@ -90,6 +94,9 @@ const Dashboard = () => {
     const setViewNT = () =>{
         setViewFiles(false);
     }
+
+
+
     if(!userWallet.wallets){
         return(
             <>
